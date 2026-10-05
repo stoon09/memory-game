@@ -10,7 +10,11 @@ document.body.append(btn);
 btn.type = "button";
 
 btn.addEventListener('click', startNewGame);
-
+const leaderboardBtn = document.createElement('button');
+leaderboardBtn.type = 'button';
+leaderboardBtn.textContent = 'Таблица лидеров';
+document.body.append(leaderboardBtn);
+leaderboardBtn.addEventListener('click', showLeaderboardModal);
 // карточки 16 штук
 const symbols = ['🍎', '🍌', '🍇', '🍒', '🍓', '🍉', '🍑', '🥝'];
 
@@ -99,7 +103,9 @@ function handleCardClick(card) {
 
   updateCounters();
   if (matchedPairs === 1) {
+  saveResult(moves);
   showWinModal();
+
 }
 }
 
@@ -179,5 +185,74 @@ function showWinModal() {
   closeBtn.addEventListener('click', closeModal);
 
   content.append(heading, text, newGameBtn, closeBtn);
+  openModal(content);
+}
+const STORAGE_KEY = 'memory-game-results';
+
+function loadResults() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveResult(movesCount) {
+  const results = loadResults();
+  results.push({ moves: movesCount, date: Date.now() });
+  results.sort((a, b) => a.moves - b.moves || a.date - b.date);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(results.slice(0, 10)));
+}
+
+function formatDate(timestamp) {
+  const d = new Date(timestamp);
+  const day = String(d.getDate()).padStart(2, '0');
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  return `${day}.${month}.${d.getFullYear()}`;
+}
+function showLeaderboardModal() {
+  const content = document.createElement('div');
+
+  const heading = document.createElement('h2');
+  heading.textContent = 'Таблица лидеров';
+  content.append(heading);
+
+  const results = loadResults();
+
+  if (results.length === 0) {
+    const empty = document.createElement('p');
+    empty.textContent = 'Пока нет результатов';
+    content.append(empty);
+  } else {
+    const table = document.createElement('table');
+
+    const headRow = document.createElement('tr');
+    ['Место', 'Ходы', 'Дата'].forEach((label) => {
+      const th = document.createElement('th');
+      th.textContent = label;
+      headRow.append(th);
+    });
+    table.append(headRow);
+
+    results.forEach((result, index) => {
+      const row = document.createElement('tr');
+      [index + 1, result.moves, formatDate(result.date)].forEach((value) => {
+        const td = document.createElement('td');
+        td.textContent = value;
+        row.append(td);
+      });
+      table.append(row);
+    });
+
+    content.append(table);
+  }
+
+  const closeBtn = document.createElement('button');
+  closeBtn.type = 'button';
+  closeBtn.textContent = 'Закрыть';
+  closeBtn.addEventListener('click', closeModal);
+  content.append(closeBtn);
+
   openModal(content);
 }

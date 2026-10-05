@@ -36,3 +36,13 @@
 .no-scroll {
   overflow: hidden;
 }
+
+table {
+  border-collapse: collapse;
+  margin: 12px auto;
+}
+
+th, td {
+  padding: 6px 14px;
+  border-bottom: 1px solid #ddd;
+}
