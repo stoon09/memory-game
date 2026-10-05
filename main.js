@@ -9,9 +9,7 @@ btn.textContent = "Новая игра";
 document.body.append(btn);
 btn.type = "button";
 
-btn.addEventListener('click', () => {
-    console.log('клик');
-});
+btn.addEventListener('click', startNewGame);
 
 // карточки 16 штук
 const symbols = ['🍎', '🍌', '🍇', '🍒', '🍓', '🍉', '🍑', '🥝'];
@@ -98,6 +96,25 @@ function handleCardClick(card) {
       isLocked = false;
     }, 1000);
   }
+
+  updateCounters();
+}
+
+//новая игра
+function startNewGame() {
+  clearTimeout(closeTimer);
+  closeTimer = null;
+  isLocked = false;
+  firstCard = null;
+  moves = 0;
+  matchedPairs = 0;
+
+  const newSymbols = shuffle([...symbols, ...symbols]);
+  cards.forEach((card, index) => {
+    card.symbol = newSymbols[index];
+    card.isMatched = false;
+    closeCard(card);
+  });
 
   updateCounters();
 }
