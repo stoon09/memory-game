@@ -34,8 +34,50 @@ function openCard(card){
     card.element.textContent = card.symbol;
 }
 
-cards.forEach((card) =>{
-    card.element.addEventListener('click', () =>{
-        openCard(card);
-    })
-})
+cards.forEach((card) => {
+  card.element.addEventListener('click', () => handleCardClick(card));
+});
+
+//логика пары
+let firstCard = null;
+let isLocked = false;
+let closeTimer = null;
+let moves = 0;
+let matchedPairs = 0;
+
+function closeCard(card) {
+  card.isOpen = false;
+  card.element.classList.remove('open');
+  card.element.textContent = '';
+}
+
+function handleCardClick(card) {
+  if (isLocked || card.isOpen) return;
+
+  openCard(card);
+
+  if (firstCard === null) {
+    firstCard = card;
+    return;
+  }
+
+  moves += 1;
+
+  if (firstCard.symbol === card.symbol) {
+    firstCard.isMatched = true;
+    card.isMatched = true;
+    matchedPairs += 1;
+    firstCard = null;
+  } else {
+    isLocked = true;
+    const previousCard = firstCard;
+    closeTimer = setTimeout(() => {
+      closeCard(previousCard);
+      closeCard(card);
+      firstCard = null;
+      isLocked = false;
+    }, 1000);
+  }
+
+  console.log('ходы:', moves, 'пары:', matchedPairs);
+}
