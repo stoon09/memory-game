@@ -1,22 +1,25 @@
 // заголовок страницы
 const title = document.createElement('h1');
 title.textContent = 'Memory Game';
-document.body.append(title);
 
 // кнопка Создать игру
 const btn = document.createElement('button');
 btn.textContent = "Новая игра";
-document.body.append(btn);
 btn.type = "button";
 
 btn.addEventListener('click', startNewGame);
 const leaderboardBtn = document.createElement('button');
 leaderboardBtn.type = 'button';
 leaderboardBtn.textContent = 'Таблица лидеров';
-document.body.append(leaderboardBtn);
 leaderboardBtn.addEventListener('click', showLeaderboardModal);
+const header = document.createElement('header');
+header.append(title, btn, leaderboardBtn);
+document.body.prepend(header);
 // карточки 16 штук
-const symbols = ['🍎', '🍌', '🍇', '🍒', '🍓', '🍉', '🍑', '🥝'];
+const symbols = [
+  'images/star.svg', 'images/heart.svg', 'images/moon.svg', 'images/sun.svg',
+  'images/leaf.svg', 'images/drop.svg', 'images/flower.svg', 'images/bolt.svg',
+];
 
 function shuffle(array) {
   const result = [...array];
@@ -40,10 +43,13 @@ const cards = cardsData.map((symbol) => {
     return {symbol, element, isOpen: false, isMatched: false};
 })
 
-function openCard(card){
-    card.isOpen = true;
-    card.element.classList.add('open');
-    card.element.textContent = card.symbol;
+function openCard(card) {
+  card.isOpen = true;
+  card.element.classList.add('open');
+  const img = document.createElement('img');
+  img.src = card.symbol;
+  img.alt = '';
+  card.element.append(img);
 }
 
 cards.forEach((card) => {
@@ -70,7 +76,7 @@ updateCounters();
 function closeCard(card) {
   card.isOpen = false;
   card.element.classList.remove('open');
-  card.element.textContent = '';
+  card.element.replaceChildren();
 }
 
 function handleCardClick(card) {
@@ -102,7 +108,7 @@ function handleCardClick(card) {
   }
 
   updateCounters();
-  if (matchedPairs === 1) {
+  if (matchedPairs === 8) {
   saveResult(moves);
   showWinModal();
 

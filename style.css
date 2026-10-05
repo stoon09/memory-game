@@ -46,3 +46,14 @@ th, td {
   padding: 6px 14px;
   border-bottom: 1px solid #ddd;
 }
+.card img {
+  width: 60px;
+  height: 60px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
