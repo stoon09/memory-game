@@ -9,6 +9,11 @@
   align-items: center;
   justify-content: center;
   font-size: 40px;
-  background: #eee;
+  background: #4a90d9;
   border-radius: 8px;
+  cursor: pointer;
+}
+
+.card.open {
+  background: #eee;
 }

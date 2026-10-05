@@ -21,10 +21,21 @@ const board = document.createElement('div');
 board.classList.add("board");
 document.body.append(board);
 
-cardsData.forEach((symbol) => {
-    const card = document.createElement("div");
-    card.classList.add('card');
-    card.textContent = symbol;
-    board.append(card);
+const cards = cardsData.map((symbol) => {
+    const element = document.createElement('div');
+    element.classList.add('card');
+    board.append(element);
+    return {symbol, element, isOpen: false, isMatched: false};
 })
 
+function openCard(card){
+    card.isOpen = true;
+    card.element.classList.add('open');
+    card.element.textContent = card.symbols;
+}
+
+cards.forEach((card) =>{
+    card.element.addEventListener('click', () =>{
+        openCard(card);
+    })
+})
