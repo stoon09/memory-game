@@ -98,6 +98,9 @@ function handleCardClick(card) {
   }
 
   updateCounters();
+  if (matchedPairs === 1) {
+  showWinModal();
+}
 }
 
 //новая игра
@@ -117,4 +120,64 @@ function startNewGame() {
   });
 
   updateCounters();
+}
+
+//окно победы и таблица лидеров
+let activeModal = null;
+
+function openModal(content) {
+  closeModal();
+
+  const overlay = document.createElement('div');
+  overlay.classList.add('modal-overlay');
+
+  const modal = document.createElement('div');
+  modal.classList.add('modal');
+  modal.append(content);
+  overlay.append(modal);
+
+  overlay.addEventListener('click', (event) => {
+    if (event.target === overlay) closeModal();
+  });
+
+  document.body.append(overlay);
+  document.body.classList.add('no-scroll');
+  activeModal = overlay;
+}
+
+function closeModal() {
+  if (!activeModal) return;
+  activeModal.remove();
+  activeModal = null;
+  document.body.classList.remove('no-scroll');
+}
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') closeModal();
+});
+
+function showWinModal() {
+  const content = document.createElement('div');
+
+  const heading = document.createElement('h2');
+  heading.textContent = 'Победа!';
+
+  const text = document.createElement('p');
+  text.textContent = `Вы нашли все пары за ${moves} ходов.`;
+
+  const newGameBtn = document.createElement('button');
+  newGameBtn.type = 'button';
+  newGameBtn.textContent = 'Новая игра';
+  newGameBtn.addEventListener('click', () => {
+    closeModal();
+    startNewGame();
+  });
+
+  const closeBtn = document.createElement('button');
+  closeBtn.type = 'button';
+  closeBtn.textContent = 'Закрыть';
+  closeBtn.addEventListener('click', closeModal);
+
+  content.append(heading, text, newGameBtn, closeBtn);
+  openModal(content);
 }
