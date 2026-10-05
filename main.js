@@ -15,11 +15,21 @@ btn.addEventListener('click', () => {
 
 // карточки 16 штук
 const symbols = ['🍎', '🍌', '🍇', '🍒', '🍓', '🍉', '🍑', '🥝'];
-const cardsData = [...symbols,...symbols];
+
+function shuffle(array) {
+  const result = [...array];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+const cardsData = shuffle([...symbols, ...symbols]);
 
 const board = document.createElement('div');
 board.classList.add("board");
 document.body.append(board);
+
 
 const cards = cardsData.map((symbol) => {
     const element = document.createElement('div');
@@ -45,6 +55,16 @@ let closeTimer = null;
 let moves = 0;
 let matchedPairs = 0;
 
+const movesText = document.createElement('p');
+const pairsText = document.createElement('p');
+document.body.append(movesText, pairsText);
+
+function updateCounters() {
+  movesText.textContent = `Ходы: ${moves}`;
+  pairsText.textContent = `Пары: ${matchedPairs} из 8`;
+}
+
+updateCounters();
 function closeCard(card) {
   card.isOpen = false;
   card.element.classList.remove('open');
@@ -79,5 +99,5 @@ function handleCardClick(card) {
     }, 1000);
   }
 
-  console.log('ходы:', moves, 'пары:', matchedPairs);
+  updateCounters();
 }
