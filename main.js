@@ -31,7 +31,7 @@ const cards = cardsData.map((symbol) => {
 function openCard(card){
     card.isOpen = true;
     card.element.classList.add('open');
-    card.element.textContent = card.symbols;
+    card.element.textContent = card.symbol;
 }
 
 cards.forEach((card) =>{
